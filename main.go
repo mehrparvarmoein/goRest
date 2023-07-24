@@ -30,7 +30,7 @@ func loadEnv() {
 func loadDatabase() {
     config.Connect()
     config.Database.AutoMigrate(&models.User{})
-    config.Database.AutoMigrate(&models.Entry{})
+    config.Database.AutoMigrate(&models.Post{})
 }
 
 func serveApplication() {

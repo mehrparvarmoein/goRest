@@ -19,13 +19,6 @@ func Register(context *gin.Context) {
 		return
 	}
 
-	// var count int64
-	// config.Database.Model(&models.User{}).Where("username = ?", input.Username).Count(&count)
-	// if count > 0 {
-	//     context.JSON(http.StatusUnprocessableEntity, gin.H{"error": "username already exists"})
-	//     return
-	// }
-
 	var userFind models.User
 	exists := config.Database.Where("username = ?", input.Username).First(&userFind)
 
@@ -48,6 +41,8 @@ func Register(context *gin.Context) {
 
 	context.JSON(http.StatusCreated, gin.H{"user": savedUser})
 }
+
+
 
 func Login(context *gin.Context) {
 	var input validation.AuthenticationInput
