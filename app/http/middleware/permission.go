@@ -23,9 +23,10 @@ func Permission(p string) gin.HandlerFunc {
         permissions := strings.Split(p,"|")
         for _,p := range permissions {
             fmt.Println(p)
-            ok, _ := packages.Auth.CheckUserPermission(user.ID, p)
+            ok, _ := packages.Rbac.CheckUserPermission(user.ID, p)
             if ok {
                 context.Next() 
+                return
             }
 
         }

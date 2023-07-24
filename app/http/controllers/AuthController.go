@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"net/http"
+	"os"
+	"rest_api/app/http/validation"
+	"rest_api/app/models"
 	"rest_api/config"
 	"rest_api/helper"
-	"rest_api/models"
-	"rest_api/validation"
 
 	"github.com/gin-gonic/gin"
 )
@@ -76,10 +77,6 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"jwt": jwt})
+	context.JSON(http.StatusOK, gin.H{"user" : user , "jwt": jwt ,  "ttl" : os.Getenv("TOKEN_TTL")})
 }
 
-// func Welcome(context *gin.Context) {
-
-//     context.JSON(http.StatusOK, gin.H{"jwt": "jwt"})
-// }

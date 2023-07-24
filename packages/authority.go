@@ -6,10 +6,10 @@ import (
 	"github.com/harranali/authority"
 )
 
-var Auth *authority.Authority
+var Rbac *authority.Authority
 
 func InitAuthority() {
-	Auth = authority.New(authority.Options{
+	Rbac = authority.New(authority.Options{
 		TablesPrefix: "authority_",
 		DB:           config.Database,
 	})

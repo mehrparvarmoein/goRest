@@ -1,7 +1,7 @@
 package helper
 
 import (
-    "rest_api/models"
+    "rest_api/app/models"
     "errors"
     "fmt"
     "os"
