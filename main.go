@@ -11,30 +11,30 @@ import (
 	"github.com/joho/godotenv"
 )
 
-
 func main() {
-    loadEnv()
-    loadDatabase()
-    packages.InitAuthority()
-    serveApplication()
+	loadEnv()
+	loadDatabase()
+	packages.InitAuthority()
+	models.CreateSuperAdmin()
+	serveApplication()
 
 }
 
 func loadEnv() {
-    err := godotenv.Load(".env")
-    if err != nil {
-        log.Fatal("Error loading .env file")
-    }
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 }
 
 func loadDatabase() {
-    config.Connect()
-    config.Database.AutoMigrate(&models.User{})
-    config.Database.AutoMigrate(&models.Post{})
-    models.CreateSuperAdmin()
+	config.Connect()
+	config.Database.AutoMigrate(&models.User{})
+	config.Database.AutoMigrate(&models.Post{})
+
 }
 
 func serveApplication() {
-    routes.Web()
-    fmt.Println("Server running on port 8000")
+	routes.Web()
+	fmt.Println("Server running on port 8000")
 }

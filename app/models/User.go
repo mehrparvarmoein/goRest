@@ -2,11 +2,8 @@ package models
 
 import (
 	"html"
-	"log"
-	"math/rand"
 	"rest_api/config"
 	"strings"
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -57,48 +54,4 @@ func FindUserById(id uint) (User, error) {
 		return User{}, err
 	}
 	return user, nil
-}
-
-const charset = "abcdefghijklmnopqrstuvwxyz" +
-	"ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-	"0123456789" +
-	"!@#$%^&*()-_+=<>,."
-
-func generateRandomPassword(length int) string {
-	rand.Seed(time.Now().UnixNano())
-	b := make([]byte, length)
-	for i := range b {
-		b[i] = charset[rand.Intn(len(charset))]
-	}
-	return string(b)
-}
-
-func CreateSuperAdmin() {
-	superAdminUsername := "superadmin"
-	rawPassword := generateRandomPassword(12)
-
-	// Check if superadmin already exists
-	var user User
-	if err := config.Database.Where("username = ?", superAdminUsername).First(&user).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-
-			superAdmin := User{
-				Username: superAdminUsername,
-				Password: rawPassword,
-			}
-
-			_, err := superAdmin.Save()
-			if err != nil {
-				log.Fatalf("Failed to create superadmin: %v", err)
-			}
-
-			log.Println("Superadmin user created, Password: ", rawPassword)
-
-		} else {
-			// Some other error occurred
-			log.Fatalf("Failed to check superadmin existence: %v", err)
-		}
-	} else {
-		log.Println("Superadmin user already exists!")
-	}
 }
