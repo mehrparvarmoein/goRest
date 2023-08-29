@@ -59,18 +59,6 @@ func StorePermissions(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": permissions})
 }
 
-// func ShowPermissions(context *gin.Context) {
-// 	id := context.Param("id")
-
-// 	permissions, err := packages.Rbac.GetAllPermissions()
-
-// 	if err != nil {
-// 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-// 	context.JSON(http.StatusOK, gin.H{"data": permissions})
-// }
-
 func DeletePermissions(context *gin.Context) {
 	var input PermissionInput
 

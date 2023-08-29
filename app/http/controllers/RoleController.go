@@ -78,18 +78,6 @@ func StoreRoles(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{"data": roles})
 }
 
-// func ShowRoles(context *gin.Context) {
-// 	id := context.Param("id")
-
-// 	roles, err := packages.Rbac.GetAllRoles()
-
-// 	if err != nil {
-// 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-// 	context.JSON(http.StatusOK, gin.H{"data": roles})
-// }
-
 func DeleteRoles(context *gin.Context) {
 	var input RoleInput
 
