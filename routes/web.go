@@ -14,6 +14,11 @@ func Web() {
 	publicRoutes.POST("/register", controllers.Register)
 	publicRoutes.POST("/login", controllers.Login)
 
+	adminRoutes := router.Group("/admin")
+	adminRoutes.Use(middleware.JWTAuthMiddleware())
+	adminRoutes.Use(middleware.Permission("superadmin"))
+	adminRoutes.GET("/users", controllers.GetAllUsers)
+
 	protectedRoutes := router.Group("/api")
 	protectedRoutes.Use(middleware.JWTAuthMiddleware())
 	protectedRoutes.Use(middleware.Permission("superadmin"))
