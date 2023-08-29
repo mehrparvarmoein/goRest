@@ -101,3 +101,23 @@ func DeletePermissions(context *gin.Context) {
 
 	context.JSON(http.StatusOK, gin.H{"data": permissions})
 }
+
+func AssignPermissionsToRole(context *gin.Context) {
+	var requestBody struct {
+		Role        string   `json:"role"`
+		Permissions []string `json:"permissions"`
+	}
+
+	if err := context.ShouldBindJSON(&requestBody); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	err := packages.Rbac.AssignPermissionsToRole(requestBody.Role, requestBody.Permissions)
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusOK, gin.H{"data": "Permissions assigned successfully"})
+}
