@@ -31,6 +31,7 @@ func loadDatabase() {
     config.Connect()
     config.Database.AutoMigrate(&models.User{})
     config.Database.AutoMigrate(&models.Post{})
+    models.CreateSuperAdmin()
 }
 
 func serveApplication() {

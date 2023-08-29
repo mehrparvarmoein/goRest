@@ -15,7 +15,7 @@ func Register(context *gin.Context) {
 	var input validation.AuthenticationInput
 
 	if err := context.ShouldBindJSON(&input); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, gin.H{"error, Not a valid JSON": err.Error()})
 		return
 	}
 
@@ -42,8 +42,6 @@ func Register(context *gin.Context) {
 	context.JSON(http.StatusCreated, gin.H{"user": savedUser})
 }
 
-
-
 func Login(context *gin.Context) {
 	var input validation.AuthenticationInput
 
@@ -62,7 +60,7 @@ func Login(context *gin.Context) {
 	err = user.ValidatePassword(input.Password)
 
 	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, gin.H{"error: Invalid User or Password": err.Error()})
 		return
 	}
 
@@ -72,6 +70,5 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"user" : user , "jwt": jwt ,  "ttl" : os.Getenv("TOKEN_TTL")})
+	context.JSON(http.StatusOK, gin.H{"user": user, "jwt": jwt, "ttl": os.Getenv("TOKEN_TTL")})
 }
-
