@@ -69,13 +69,7 @@ func StoreRoles(context *gin.Context) {
 		return
 	}
 
-	roles, err := packages.Rbac.GetAllRoles()
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	context.JSON(http.StatusOK, gin.H{"data": roles})
+	context.JSON(http.StatusOK, gin.H{"data": "role created successfully"})
 }
 
 func DeleteRoles(context *gin.Context) {
@@ -100,11 +94,25 @@ func DeleteRoles(context *gin.Context) {
 		return
 	}
 
-	roles, err := packages.Rbac.GetAllRoles()
+	context.JSON(http.StatusOK, gin.H{"data": "role deleted successfully"})
+}
+
+func AssignRoleToUser(context *gin.Context) {
+	var requestBody struct {
+		Role   string   `json:"role"`
+		UserID []string `json:"userid"`
+	}
+
+	if err := context.ShouldBindJSON(&requestBody); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	err := packages.Rbac.AssignRoleToUser(requestBody.UserID, requestBody.Role)
+
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	context.JSON(http.StatusOK, gin.H{"data": roles})
+	context.JSON(http.StatusOK, gin.H{"data": "role assigned successfully"})
 }
