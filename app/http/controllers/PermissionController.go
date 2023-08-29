@@ -26,7 +26,7 @@ func IndexPermissions(context *gin.Context) {
 }
 
 func StorePermissions(context *gin.Context) {
-	var input RoleInput
+	var input PermissionInput
 
 	// Bind the JSON body to the struct
 	if err := context.ShouldBindJSON(&input); err != nil {
@@ -40,7 +40,7 @@ func StorePermissions(context *gin.Context) {
 		return
 	}
 
-	err := packages.Rbac.CreateRole(authority.Role{
+	err := packages.Rbac.CreatePermission(authority.Permission{
 		Name: name,
 		Slug: toSlug(name),
 	})
@@ -72,7 +72,7 @@ func StorePermissions(context *gin.Context) {
 // }
 
 func DeletePermissions(context *gin.Context) {
-	var input RoleInput
+	var input PermissionInput
 
 	// Bind the JSON body to the struct
 	if err := context.ShouldBindJSON(&input); err != nil {
@@ -86,7 +86,7 @@ func DeletePermissions(context *gin.Context) {
 		return
 	}
 
-	err := packages.Rbac.DeleteRole(slug)
+	err := packages.Rbac.DeletePermission(slug)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
