@@ -20,9 +20,9 @@ func Web() {
 	adminRoutes.GET("/users", controllers.GetAllUsers)
 	adminRoutes.GET("/roles", controllers.IndexRoles)
 	adminRoutes.POST("/roles", controllers.StoreRoles)
-	adminRoutes.GET("/roles/:id", controllers.ShowRoles)
-	adminRoutes.PUT("/roles/:id", controllers.UpdateRoles)
-	adminRoutes.DELETE("/roles/:id", controllers.DeleteRoles)
+	// adminRoutes.GET("/roles/:id", controllers.ShowRoles)
+	// adminRoutes.PUT("/roles/:id", controllers.UpdateRoles)
+	adminRoutes.DELETE("/roles/", controllers.DeleteRoles)
 
 	protectedRoutes := router.Group("/api")
 	protectedRoutes.Use(middleware.JWTAuthMiddleware())
