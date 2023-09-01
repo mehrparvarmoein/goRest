@@ -8,7 +8,7 @@ import (
 	"rest_api/packages"
 	"time"
 
-	"github.com/harranali/authority"
+	"github.com/pooriaghaedi/authority"
 	"gorm.io/gorm"
 )
 
@@ -55,25 +55,40 @@ func CreateSuperAdmin() {
 		}
 	} else {
 		log.Println("Superadmin user already exists!")
-		
+
 	}
 }
 
 func CreatePermission(user User) {
 	fmt.Println(user.ID)
-	packages.Rbac.CreatePermission(authority.Permission{
+	err := packages.Rbac.CreatePermission(authority.Permission{
 		Name: "Superadmin",
 		Slug: "superadmin",
 	})
 
-	packages.Rbac.CreateRole(authority.Role{
+	if err != nil {
+		log.Fatalf("Failed to create Permission: %v", err)
+	}
+
+	err = packages.Rbac.CreateRole(authority.Role{
 		Name: "sa",
 		Slug: "sa",
 	})
 
-	packages.Rbac.AssignPermissionsToRole("sa", []string{
+	if err != nil {
+		log.Fatalf("Failed to create role: %v", err)
+	}
+
+	err = packages.Rbac.AssignPermissionsToRole("sa", []string{
 		"superadmin",
 	})
 
-	packages.Rbac.AssignRoleToUser(user.ID, "sa")
+	if err != nil {
+		log.Fatalf("Failed to assign permission to role: %v", err)
+	}
+
+	err = packages.Rbac.AssignRoleToUser(user.ID, "sa")
+	if err != nil {
+		log.Fatalf("Failed to assign role to user: %v", err)
+	}
 }

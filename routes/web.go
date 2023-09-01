@@ -27,6 +27,9 @@ func Web() {
 	adminRoutes.POST("/permissions", controllers.StorePermissions)
 	adminRoutes.DELETE("/permissions", controllers.DeletePermissions)
 	adminRoutes.POST("/assign-permissions", controllers.AssignPermissionsToRole)
+	adminRoutes.POST("/revoke-permissions", controllers.RevokeRolePermission)
+	adminRoutes.POST("/assign-user-role", controllers.AssignRoleToUser)
+	adminRoutes.POST("/revoke-user-role", controllers.RevokeUserRole)
 
 	protectedRoutes := router.Group("/api")
 	protectedRoutes.Use(middleware.JWTAuthMiddleware())

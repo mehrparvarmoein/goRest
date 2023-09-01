@@ -3,7 +3,7 @@ package packages
 import (
 	"rest_api/config"
 
-	"github.com/harranali/authority"
+	"github.com/pooriaghaedi/authority"
 )
 
 var Rbac *authority.Authority
@@ -14,3 +14,5 @@ func InitAuthority() {
 		DB:           config.Database,
 	})
 }
+
+var Role *authority.Role

@@ -14,6 +14,7 @@ type User struct {
 	Username string `gorm:"size:255;not null;unique" json:"username"`
 	Password string `gorm:"size:255;not null;" json:"-"`
 	Posts    []Post
+	Roles    []Role `gorm:"many2many:authority_user_roles;"`
 }
 
 func (user *User) Save() (*User, error) {

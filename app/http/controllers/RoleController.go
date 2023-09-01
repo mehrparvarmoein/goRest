@@ -7,13 +7,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/harranali/authority"
+	"github.com/pooriaghaedi/authority"
 )
-
-type RoleInput struct {
-	Name string `json:"name"`
-	Slug string `json:"slug"`
-}
 
 func toSlug(input string) string {
 	// Convert to lowercase
@@ -45,23 +40,19 @@ func IndexRoles(context *gin.Context) {
 }
 
 func StoreRoles(context *gin.Context) {
-	var input RoleInput
-
-	// Bind the JSON body to the struct
-	if err := context.ShouldBindJSON(&input); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
-		return
+	var RoleInput struct {
+		Name string `json:"name" binding:"required"`
 	}
 
-	name := input.Name
-	if name == "" {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input, name is required"})
+	// Bind the JSON body to the struct
+	if err := context.ShouldBindJSON(&RoleInput); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	err := packages.Rbac.CreateRole(authority.Role{
-		Name: name,
-		Slug: toSlug(name),
+		Name: RoleInput.Name,
+		Slug: toSlug(RoleInput.Name),
 	})
 
 	if err != nil {
@@ -73,21 +64,17 @@ func StoreRoles(context *gin.Context) {
 }
 
 func DeleteRoles(context *gin.Context) {
-	var input RoleInput
+	var RoleInput struct {
+		Slug string `json:"slug" binding:"required"`
+	}
 
 	// Bind the JSON body to the struct
-	if err := context.ShouldBindJSON(&input); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+	if err := context.ShouldBindJSON(&RoleInput); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	slug := input.Slug
-	if slug == "" {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input, slug is required"})
-		return
-	}
-
-	err := packages.Rbac.DeleteRole(slug)
+	err := packages.Rbac.DeleteRole(RoleInput.Slug)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -99,12 +86,12 @@ func DeleteRoles(context *gin.Context) {
 
 func AssignRoleToUser(context *gin.Context) {
 	var requestBody struct {
-		Role   string   `json:"role"`
-		UserID []string `json:"userid"`
+		Role   string `json:"role" binding:"required"`
+		UserID uint   `json:"userid" binding:"required"`
 	}
 
 	if err := context.ShouldBindJSON(&requestBody); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -115,4 +102,44 @@ func AssignRoleToUser(context *gin.Context) {
 		return
 	}
 	context.JSON(http.StatusOK, gin.H{"data": "role assigned successfully"})
+}
+
+func RevokeUserRole(context *gin.Context) {
+	var requestBody struct {
+		Role   string `json:"role" binding:"required"`
+		UserID string `json:"userid" binding:"required"`
+	}
+
+	if err := context.ShouldBindJSON(&requestBody); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := packages.Rbac.RevokeUserRole(requestBody.UserID, requestBody.Role)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{"data": "role revoked successfully"})
+}
+
+func RevokeRolePermission(context *gin.Context) {
+	var requestBody struct {
+		Role       string `json:"role" binding:"required"`
+		Permission string `json:"permission" binding:"required"`
+	}
+
+	if err := context.ShouldBindJSON(&requestBody); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := packages.Rbac.RevokeRolePermission(requestBody.Role, requestBody.Permission)
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	context.JSON(http.StatusOK, gin.H{"data": "permission revoked successfully"})
 }

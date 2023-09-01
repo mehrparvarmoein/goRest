@@ -5,13 +5,8 @@ import (
 	"rest_api/packages"
 
 	"github.com/gin-gonic/gin"
-	"github.com/harranali/authority"
+	"github.com/pooriaghaedi/authority"
 )
-
-type PermissionInput struct {
-	Name string `json:"name"`
-	Slug string `json:"slug"`
-}
 
 func IndexPermissions(context *gin.Context) {
 
@@ -26,19 +21,17 @@ func IndexPermissions(context *gin.Context) {
 }
 
 func StorePermissions(context *gin.Context) {
-	var input PermissionInput
+	var PermissionInput struct {
+		Name string `json:"name" binding:"required"`
+	}
 
 	// Bind the JSON body to the struct
-	if err := context.ShouldBindJSON(&input); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+	if err := context.ShouldBindJSON(&PermissionInput); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	name := input.Name
-	if name == "" {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input, name is required"})
-		return
-	}
+	name := PermissionInput.Name
 
 	err := packages.Rbac.CreatePermission(authority.Permission{
 		Name: name,
@@ -50,54 +43,38 @@ func StorePermissions(context *gin.Context) {
 		return
 	}
 
-	permissions, err := packages.Rbac.GetAllPermissions()
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	context.JSON(http.StatusOK, gin.H{"data": permissions})
+	context.JSON(http.StatusOK, gin.H{"data": "Permission stored sucessfully"})
 }
 
 func DeletePermissions(context *gin.Context) {
-	var input PermissionInput
+	var PermissionInput struct {
+		Slug string `json:"slug" binding:"required"`
+	}
 
 	// Bind the JSON body to the struct
-	if err := context.ShouldBindJSON(&input); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+	if err := context.ShouldBindJSON(&PermissionInput); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	slug := input.Slug
-	if slug == "" {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input, slug is required"})
-		return
-	}
-
-	err := packages.Rbac.DeletePermission(slug)
+	err := packages.Rbac.DeletePermission(PermissionInput.Slug)
 
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	permissions, err := packages.Rbac.GetAllPermissions()
-	if err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	context.JSON(http.StatusOK, gin.H{"data": permissions})
+	context.JSON(http.StatusOK, gin.H{"data": "Permission deleted sucessfully"})
 }
 
 func AssignPermissionsToRole(context *gin.Context) {
 	var requestBody struct {
-		Role        string   `json:"role"`
-		Permissions []string `json:"permissions"`
+		Role        string   `json:"role" binding:"required"`
+		Permissions []string `json:"permissions" binding:"required"`
 	}
 
 	if err := context.ShouldBindJSON(&requestBody); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
