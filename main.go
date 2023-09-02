@@ -14,7 +14,6 @@ import (
 func main() {
 	loadEnv()
 	loadDatabase()
-	packages.InitAuthority()
 	models.CreateSuperAdmin()
 	serveApplication()
 
@@ -29,6 +28,7 @@ func loadEnv() {
 
 func loadDatabase() {
 	config.Connect()
+	packages.InitAuthority()
 	config.Database.AutoMigrate(&models.User{})
 	config.Database.AutoMigrate(&models.Post{})
 

@@ -68,6 +68,7 @@ func CreatePermission(user User) {
 
 	if err != nil {
 		log.Fatalf("Failed to create Permission: %v", err)
+
 	}
 
 	err = packages.Rbac.CreateRole(authority.Role{

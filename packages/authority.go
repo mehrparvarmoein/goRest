@@ -13,6 +13,7 @@ func InitAuthority() {
 		TablesPrefix: "authority_",
 		DB:           config.Database,
 	})
+
 }
 
 var Role *authority.Role
