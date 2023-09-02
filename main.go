@@ -29,8 +29,11 @@ func loadEnv() {
 func loadDatabase() {
 	config.Connect()
 	packages.InitAuthority()
-	config.Database.AutoMigrate(&models.User{})
-	config.Database.AutoMigrate(&models.Post{})
+	err := config.Database.AutoMigrate(&models.User{})
+	if err != nil {
+		log.Fatalf("Failed to create Permission: %v", err)
+
+	}
 
 }
 

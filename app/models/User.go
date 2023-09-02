@@ -12,9 +12,8 @@ import (
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"size:255;not null;unique" json:"username"`
-	Password string `gorm:"size:255;not null;" json:"-"`
-	Posts    []Post
+	Username string           `gorm:"size:255;not null;unique" json:"username"`
+	Password string           `gorm:"size:255;not null;" json:"-"`
 	Roles    []authority.Role `gorm:"many2many:authority_user_roles;"`
 }
 

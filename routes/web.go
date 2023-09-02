@@ -34,9 +34,9 @@ func Web() {
 	protectedRoutes := router.Group("/api")
 	protectedRoutes.Use(middleware.JWTAuthMiddleware())
 	protectedRoutes.Use(middleware.Permission("superadmin"))
-	protectedRoutes.POST("/posts", controllers.AddPost)
-	protectedRoutes.GET("/posts", controllers.GetAllPosts)
-	protectedRoutes.GET("/user-posts", controllers.GetUserPosts)
+	// protectedRoutes.POST("/posts", controllers.AddPost)
+	// protectedRoutes.GET("/posts", controllers.GetAllPosts)
+	// protectedRoutes.GET("/user-posts", controllers.GetUserPosts)
 
 	router.Run(":8000")
 }
